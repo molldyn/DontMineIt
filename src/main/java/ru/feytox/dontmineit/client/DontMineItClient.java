@@ -18,6 +18,9 @@ public class DontMineItClient implements ClientModInitializer {
     public void onInitializeClient() {
         AutoConfig.register(ModConfig.class, JanksonConfigSerializer::new);
         DMICommand.init();
+
+        // Добавляем вызов метода onKeyPress() при инициализации клиента
+        ModConfig.onKeyPress();
     }
 
     public static boolean checkBlockInList(BlockState blockState, List<String> blockList) {
