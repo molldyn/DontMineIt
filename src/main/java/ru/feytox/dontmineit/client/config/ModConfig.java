@@ -4,6 +4,8 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import net.minecraft.client.options.KeyBinding;
+import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -34,7 +36,6 @@ public class ModConfig implements ConfigData {
         AutoConfig.getConfigHolder(ModConfig.class).save();
     }
 
-
     @ConfigEntry.Gui.PrefixText
     public boolean toggleMod = true;
 
@@ -48,4 +49,21 @@ public class ModConfig implements ConfigData {
     public List<String> allBlockList = new ArrayList<>();
     public List<String> onlySilkList = new ArrayList<>();
     public List<String> onlyFortuneList = new ArrayList<>();
+
+    // Добавляем новое поле для хранения состояния клавиши
+    private static final KeyBinding keyToggleMod = new KeyBinding("key.dontmineit.toggleMod", GLFW.GLFW_KEY_NUMPAD_0, "key.categories.dontmineit");
+
+    static {
+        // Регистрируем клавишу
+        net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper.registerKeyBinding(keyToggleMod);
+    }
+
+    public static void onKeyPress() {
+        // Обрабатываем нажатие клавиши
+        if (keyToggleMod.wasPressed()) {
+            ModConfig config = get();
+            config.toggleMod = !config.toggleMod;
+            save();
+        }
+    }
 }
